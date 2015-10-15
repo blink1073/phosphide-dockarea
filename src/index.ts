@@ -54,7 +54,7 @@ class DockAreaExtensionPoint {
   }
 
   extend(item: any): IDisposable {
-    this._dockarea.addWidget( item );
+    this._dockarea.addWidget( item.item );
     return;
   }
 

@@ -54,6 +54,7 @@ class DockAreaExtensionPoint {
   }
 
   extend(item: any): IDisposable {
+    DockPanel.setTab(item.item, item.tab);
     this._dockarea.addWidget( item.item );
     return;
   }

@@ -39,6 +39,18 @@ function createContent(title: string): Widget {
 }
 
 
+/**
+ * The interface that must be adhered to in order to interact
+ * with the DockAreaExtensionPoint.
+ */
+export 
+interface IDockAreaExtension {
+  pointName: string;
+  item: any;
+  tab?: Tab;
+}
+
+
 export
 class DockAreaExtensionPoint {
   constructor(id: string) {
@@ -53,9 +65,9 @@ class DockAreaExtensionPoint {
     window.onresize = () => this._dockarea.update();
   }
 
-  extend(item: any): IDisposable {
+  extend(item: IDockAreaExtension): IDisposable {
     DockPanel.setTab(item.item, item.tab);
-    this._dockarea.addWidget( item.item );
+    this._dockarea.addWidget(item.item);
     return;
   }
 

@@ -8,7 +8,7 @@
 'use strict';
 
 import {
-  IExtension, IExtensionPoint
+  IExtension, IExtensionPoint, BaseDelegate
 } from 'phosphide';
 
 import {
@@ -46,8 +46,8 @@ function createContent(title: string): Widget {
 export 
 interface IDockAreaExtension {
   pointName: string;
-  item: any;
-  tab?: Tab;
+  item: any; // Widget?
+  tab: Tab;
 }
 
 
@@ -65,10 +65,13 @@ class DockAreaExtensionPoint {
     window.onresize = () => this._dockarea.update();
   }
 
-  extend(item: IDockAreaExtension): IDisposable {
-    DockPanel.setTab(item.item, item.tab);
-    this._dockarea.addWidget(item.item);
-    return;
+  extend(items: IDockAreaExtension[]): IDisposable {
+    for (var i = 0; i < items.length; ++i) {
+      DockPanel.setTab(items[i].item, items[i].tab);
+      this._dockarea.addWidget(items[i].item);
+    }
+
+    return; // TODO : return disposable.
   }
 
   id: string;
@@ -76,34 +79,21 @@ class DockAreaExtensionPoint {
 }
 
 
-export
-class DockAreaPlugin {
+export 
+class DockAreaPlugin extends BaseDelegate {
   constructor(id: string) {
+    super(id, []);
     this.id = id;
-    this._dockareaExtensionPoint = new DockAreaExtensionPoint('dockarea.main');
+    this._dockAreaExtensionPoint = new DockAreaExtensionPoint(
+      'dockarea.main'
+    );
   }
 
   extensionPoints(): IExtensionPoint[] {
-    return [this._dockareaExtensionPoint];
+    return [this._dockAreaExtensionPoint];
   }
-
-  extensions(): IExtension[] {
-    return [];
-  }
-
-  load(): IDisposable {
-    console.log('Loading dockarea plugin');
-    return;
-  }
-
-  unload(): void {
-    console.log('Unloading dockarea plugin');
-  }
-
-  isRuntimeLoaded(): boolean {
-    return true;
-  }
-
-  id: string;
-  private _dockareaExtensionPoint: IExtensionPoint;
+  
+  private _dockAreaExtensionPoint: IExtensionPoint;
 }
+
+

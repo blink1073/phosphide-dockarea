@@ -1,4 +1,4 @@
-import { IExtension, IExtensionPoint } from 'phosphide';
+import { IExtensionPoint, BaseDelegate } from 'phosphide';
 import { IDisposable } from 'phosphor-disposable';
 import { Tab } from 'phosphor-tabs';
 /**
@@ -8,21 +8,16 @@ import { Tab } from 'phosphor-tabs';
 export interface IDockAreaExtension {
     pointName: string;
     item: any;
-    tab?: Tab;
+    tab: Tab;
 }
 export declare class DockAreaExtensionPoint {
     constructor(id: string);
-    extend(item: IDockAreaExtension): IDisposable;
+    extend(items: IDockAreaExtension[]): IDisposable;
     id: string;
     private _dockarea;
 }
-export declare class DockAreaPlugin {
+export declare class DockAreaPlugin extends BaseDelegate {
     constructor(id: string);
     extensionPoints(): IExtensionPoint[];
-    extensions(): IExtension[];
-    load(): IDisposable;
-    unload(): void;
-    isRuntimeLoaded(): boolean;
-    id: string;
-    private _dockareaExtensionPoint;
+    private _dockAreaExtensionPoint;
 }

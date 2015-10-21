@@ -82,7 +82,7 @@ class DockAreaExtensionPoint {
 export 
 class DockAreaPlugin extends BaseDelegate {
   constructor(id: string) {
-    super(id, []);
+    super(id);
     this.id = id;
     this._dockAreaExtensionPoint = new DockAreaExtensionPoint(
       'dockarea.main'

@@ -8,7 +8,7 @@
 'use strict';
 
 import {
-  IExtension, IExtensionPoint, BaseDelegate
+  IExtension
 } from 'phosphide';
 
 import {
@@ -44,56 +44,36 @@ function createContent(title: string): Widget {
  * with the DockAreaExtensionPoint.
  */
 export 
-interface IDockAreaExtension {
-  pointName: string;
-  item: any; // Widget?
-  tab: Tab;
+interface IItems {
+  items: Widget[]; // Widget?
+  tabs: Tab[];
 }
 
 
 export
-class DockAreaExtensionPoint {
-  constructor(id: string) {
-    this.id = id;
-
-    var initialView = createContent('Initial Tab');
-    this._dockarea = new DockPanel();
-    this._dockarea.id = 'main';
-    this._dockarea.addWidget(initialView);
-    attachWidget(this._dockarea, document.body);
-
-    window.onresize = () => this._dockarea.update();
-  }
-
-  extend(items: IDockAreaExtension[]): IDisposable {
+function receiveItems(extension: IExtension<IItems>): IDisposable {
+  if (extension.object.hasOwnProperty('items')) {
+    var items = extension.object.items;
+    var tabs = extension.object.tabs;
     for (var i = 0; i < items.length; ++i) {
-      DockPanel.setTab(items[i].item, items[i].tab);
-      this._dockarea.addWidget(items[i].item);
+      DockPanel.setTab(items[i], tabs[i]);
+      dockarea.addWidget(items[i]);
     }
-
-    return; // TODO : return disposable.
   }
-
-  id: string;
-  private _dockarea: DockPanel;
+  return void 0;
 }
 
 
-export 
-class DockAreaPlugin extends BaseDelegate {
-  constructor(id: string) {
-    super(id);
-    this.id = id;
-    this._dockAreaExtensionPoint = new DockAreaExtensionPoint(
-      'dockarea.main'
-    );
-  }
-
-  extensionPoints(): IExtensionPoint[] {
-    return [this._dockAreaExtensionPoint];
-  }
-  
-  private _dockAreaExtensionPoint: IExtensionPoint;
+export
+function initialize(): IDisposable {
+  attachWidget(dockarea, document.body);
+  window.onresize = () => dockarea.update();
+  return void 0;
 }
 
+
+var dockarea = new DockPanel();
+dockarea.id = 'main';
+var initialView = createContent('Initial Tab');
+dockarea.addWidget(initialView);
 

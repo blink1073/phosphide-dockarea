@@ -1,23 +1,14 @@
-import { IExtensionPoint, BaseDelegate } from 'phosphide';
+import { IExtension } from 'phosphide';
 import { IDisposable } from 'phosphor-disposable';
 import { Tab } from 'phosphor-tabs';
+import { Widget } from 'phosphor-widget';
 /**
  * The interface that must be adhered to in order to interact
  * with the DockAreaExtensionPoint.
  */
-export interface IDockAreaExtension {
-    pointName: string;
-    item: any;
-    tab: Tab;
+export interface IItems {
+    items: Widget[];
+    tabs: Tab[];
 }
-export declare class DockAreaExtensionPoint {
-    constructor(id: string);
-    extend(items: IDockAreaExtension[]): IDisposable;
-    id: string;
-    private _dockarea;
-}
-export declare class DockAreaPlugin extends BaseDelegate {
-    constructor(id: string);
-    extensionPoints(): IExtensionPoint[];
-    private _dockAreaExtensionPoint;
-}
+export declare function receiveItems(extension: IExtension<IItems>): IDisposable;
+export declare function initialize(): IDisposable;

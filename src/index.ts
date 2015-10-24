@@ -52,7 +52,7 @@ interface IItems {
 
 export
 function receiveItems(extension: IExtension<IItems>): IDisposable {
-  if (extension.object.hasOwnProperty('items')) {
+  if (extension.object && extension.object.hasOwnProperty('items')) {
     var items = extension.object.items;
     var tabs = extension.object.tabs;
     for (var i = 0; i < items.length; ++i) {
